@@ -4,14 +4,7 @@ Tools to simplify **VSPC Management Agent installation** and **diagnostics** (lo
 
 ---
 
-## Launching the interface
-
-**From the project root:**
-
-```bash
-./run.sh
-```
-or `bash run.sh`
+## How to install
 
 **Direct download** (if the script is hosted on a URL): a single command to download, make executable, and run (replace the URL with yours):
 
@@ -44,6 +37,24 @@ curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-age
 ```
 
 This displays the menu: **I** Install, **D** Diagnostic, **T** Connection test, **A** Help, **Q** Quit.
+
+---
+
+## Running the script locally
+
+You can launch the tool in two ways:
+
+1. **Run the script file**  
+   - From the project root: `./run.sh` or `bash run.sh`  
+   - Or from the `sh_script` folder: `sudo bash install-veeam-agent.sh`  
+   The script must be run with `sudo` when you use `install-veeam-agent.sh` directly (installation, diagnostics, etc.).
+
+2. **Use the `ovhbackupagent` command**  
+   After a full installation or after running with `--setup-local` or `--install-global`, the script is installed as a global command. From anywhere on the machine, run:
+   ```bash
+   sudo ovhbackupagent
+   ```
+   This opens the same menu (Install, Diagnostic, connection test, Help, Quit, etc.) without needing the script file.
 
 ---
 
