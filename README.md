@@ -19,6 +19,24 @@ or `bash run.sh`
 curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh
 ```
 
+**Full installation** — download the script and install the Management Agent using its download URL (from your backup interface / VSPC). Replace `YOUR-DOMAIN` with the script URL and `URL_MANAGEMENT_AGENT` with the agent package link:
+
+```bash
+curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup "URL_MANAGEMENT_AGENT"
+```
+
+Example (with a real agent URL):
+
+```bash
+curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup "https://vspc.../LinuxAgentPackages.xxx.sh"
+```
+
+**Agents already installed** — install only the script and the `ovhbackupagent` command locally (no agent package or URL required), then open the menu:
+
+```bash
+curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup-local
+```
+
 **With installation of the `ovhbackupagent` command** then launching the menu (afterwards: `sudo ovhbackupagent` at any time):
 
 ```bash

@@ -23,11 +23,22 @@ Ce que fait cette commande :
 
 Ensuite le client peut lancer `sudo ovhbackupagent` à tout moment pour rouvrir le menu. Le README est consultable depuis le menu (option **H** — Aide / README).
 
+## Clients ayant déjà les agents installés (script en local uniquement)
+
+Une seule commande pour installer le script et la commande `ovhbackupagent` **sans** installer les agents (aucune URL de package requise) :
+
+```bash
+curl -sSL "<URL_SCRIPT>" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup-local
+```
+
+Cela : copie le script dans `/usr/local/bin/ovhbackupagent`, crée le README dans `/usr/local/share/ovhbackupagent/README.md`, puis affiche le menu. Ensuite : `sudo ovhbackupagent` à tout moment.
+
 ## Pour les mainteneurs du script
 
 - **Menu seul** : `sudo bash install-veeam-agent.sh` ou `sudo ovhbackupagent` (si déjà installé)
 - **Installation Management Agent** (URL ou chemin) : `sudo bash install-veeam-agent.sh "https://.../LinuxAgentPackages.xxx.sh"`
 - **Setup complet** (mgmt + ovhbackupagent + README + menu) : `sudo bash install-veeam-agent.sh --setup "https://.../LinuxAgentPackages.xxx.sh"`
+- **Script seul (agents déjà installés)** : `sudo bash install-veeam-agent.sh --setup-local` (pas d’URL)
 - **Diagnostic** : `sudo bash install-veeam-agent.sh --diagnostic`
 - **Installer uniquement la commande ovhbackupagent** : `sudo bash install-veeam-agent.sh --install-global`
 

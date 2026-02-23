@@ -15,6 +15,7 @@
 #   Menu                :  sudo bash install-veeam-agent.sh
 #   Install with URL    :  sudo bash install-veeam-agent.sh "https://.../LinuxAgentPackages.xxx.sh"
 #   Full setup + menu   :  sudo bash install-veeam-agent.sh --setup "https://.../LinuxAgentPackages.xxx.sh"
+#   Script only (agents already installed):  sudo bash install-veeam-agent.sh --setup-local  (no URL, installs ovhbackupagent + menu)
 #   Diagnostic          :  sudo bash install-veeam-agent.sh --diagnostic
 #   Global command      :  sudo bash install-veeam-agent.sh --install-global  (then: ovhbackupagent)
 #
@@ -829,6 +830,19 @@ install_global_command() {
   fi
 }
 
+# --- Setup script only (agents already installed): install ovhbackupagent + README, then show menu ---
+run_setup_script_only() {
+  check_root --setup-local
+  clear
+  show_banner
+  title "Installing local script and command 'ovhbackupagent' (no agent package required)..."
+  install_global_command
+  echo "──────────────────────────────────────────────────────────────────────────"
+  ok "Script installed. Opening menu..."
+  echo ""
+  run_gui
+}
+
 # --- Full setup: install Management Agent + ovhbackupagent command + README, then show menu ---
 run_setup() {
   local mgmt_url="${1:-}"
@@ -837,6 +851,7 @@ run_setup() {
     echo "  Usage: sudo bash $0 --setup \"https://.../LinuxAgentPackages.xxx.sh\""
     echo "     or: sudo bash $0 --setup \"/path/to/LinuxAgentPackages.xxx.sh\""
     echo "  Or the one-liner from the UI (curl + --setup <URL>)."
+    echo "  For agents already installed, use: sudo bash $0 --setup-local"
     exit 1
   fi
   check_root --setup
@@ -870,6 +885,7 @@ case "${1:-}" in
   --support-bundle|-b) run_support_bundle ;;
   --test-connectivity|-t) check_connectivity_msg; exit $? ;;
   --setup) run_setup "${2:-}" ;;
+  --setup-local) run_setup_script_only ;;
   --install-global) install_global_command ;;
   --readme|--help|-h)
     if [[ "${1:-}" == "--readme" ]]; then
@@ -881,6 +897,7 @@ case "${1:-}" in
       echo ""
       echo "  Menu             : sudo bash $0  (or: sudo ovhbackupagent)"
       echo "  Full setup       : sudo bash $0 --setup \"https://.../LinuxAgentPackages.xxx.sh\""
+      echo "  Script only      : sudo bash $0 --setup-local  (agents already installed; no URL)"
       echo "  Install only     : sudo bash $0 \"https://.../LinuxAgentPackages.xxx.sh\""
       echo "  Diagnostic       : sudo bash $0 --diagnostic"
       echo "  Support bundle   : sudo bash $0 --support-bundle"
