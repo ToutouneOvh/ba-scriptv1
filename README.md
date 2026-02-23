@@ -1,63 +1,63 @@
-# Veeam Agent — Installation et diagnostic (OVHcloud)
+# Veeam Agent — Installation and diagnostics (OVHcloud)
 
-Outils pour simplifier l’**installation du Management Agent** VSPC et le **diagnostic** (logs, connectivité) sur les machines Linux des clients.
+Tools to simplify **VSPC Management Agent installation** and **diagnostics** (logs, connectivity) on client Linux machines.
 
 ---
 
-## Lancer l’interface
+## Launching the interface
 
-**Depuis la racine du projet :**
+**From the project root:**
 
 ```bash
 ./run.sh
 ```
-ou `bash run.sh`
+or `bash run.sh`
 
-**Téléchargement direct** (si le script est hébergé sur une URL) : une seule commande pour télécharger, rendre exécutable et lancer (remplacer l’URL par la vôtre) :
-
-```bash
-curl -sSL "https://VOTRE-DOMAINE/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh
-```
-
-**Avec installation de la commande `ovhbackupagent`** puis lancement du menu (ensuite : `sudo ovhbackupagent` à tout moment) :
+**Direct download** (if the script is hosted on a URL): a single command to download, make executable, and run (replace the URL with yours):
 
 ```bash
-curl -sSL "https://VOTRE-DOMAINE/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --install-global && sudo ovhbackupagent
+curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh
 ```
 
-Cela affiche le menu : **I** Installer, **D** Diagnostic, **T** Test connexion, **A** Aide, **Q** Quitter.
+**With installation of the `ovhbackupagent` command** then launching the menu (afterwards: `sudo ovhbackupagent` at any time):
+
+```bash
+curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --install-global && sudo ovhbackupagent
+```
+
+This displays the menu: **I** Install, **D** Diagnostic, **T** Connection test, **A** Help, **Q** Quit.
 
 ---
 
-## Utilisation directe dans `sh_script`
+## Direct use in `sh_script`
 
-1. Allez dans le dossier **`sh_script`**.
-2. Exécutez :
+1. Go to the **`sh_script`** folder.
+2. Run:
 
 ```bash
 sudo bash install-veeam-agent.sh
 ```
 
-3. Suivez le menu à l’écran : **I** Installer, **D** Diagnostic, **T** Test connexion, **A** Aide, **Q** Quitter.
+3. Follow the on-screen menu: **I** Install, **D** Diagnostic, **T** Connection test, **A** Help, **Q** Quit.
 
-**Détails et autres commandes :** voir **`sh_script/README.md`**.
+**Details and other commands:** see **`sh_script/README.md`**.
 
 ---
 
-## Structure du projet
+## Project structure
 
 ```
 agent_linux_v2/
-├── README.md          ← Vous êtes ici
-├── run.sh             ← Lancer le script (menu)
-└── sh_script/         ← Script bash (installation + diagnostic)
+├── README.md          ← You are here
+├── run.sh             ← Run the script (menu)
+└── sh_script/         ← Bash script (installation + diagnostics)
     ├── install-veeam-agent.sh
     └── README.md
 ```
 
 ---
 
-## En cas de problème
+## Troubleshooting
 
-- **Installation / diagnostic** : le script doit être lancé avec les droits administrateur (`sudo`). Les messages à l’écran indiquent la commande à exécuter si besoin.
-- **Logs pour le support** : utilisez l’option **Diagnostic** (D) ; l’archive à envoyer est indiquée à la fin (souvent dans `/tmp/veeam-support/`).
+- **Installation / diagnostics**: the script must be run with administrator rights (`sudo`). On-screen messages indicate the command to run if needed.
+- **Logs for support**: use the **Diagnostic** (D) option; the archive to send is shown at the end (often in `/tmp/veeam-support/`).
