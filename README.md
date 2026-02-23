@@ -47,7 +47,7 @@ sudo bash install-veeam-agent.sh
 ## Project structure
 
 ```
-agent_linux_v2/
+ba-script-v1/
 ├── README.md          ← You are here
 ├── run.sh             ← Run the script (menu)
 └── sh_script/         ← Bash script (installation + diagnostics)
