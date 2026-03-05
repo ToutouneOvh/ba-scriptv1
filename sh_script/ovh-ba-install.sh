@@ -7,17 +7,17 @@
 # This installs the Management Agent, installs the global command 'ovhbackupagent',
 # creates the README on disk, and opens the menu.
 #
-#   curl -sSL "https://YOUR-DOMAIN/install-veeam-agent.sh" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup "https://.../LinuxAgentPackages.xxx.sh"
+#   curl -sSL "https://YOUR-DOMAIN/ovh-ba-install.sh" -o /tmp/ovh-ba-install.sh && chmod +x /tmp/ovh-ba-install.sh && sudo bash /tmp/ovh-ba-install.sh --setup "https://.../LinuxAgentPackages.xxx.sh"
 #
 # Replace YOUR-DOMAIN with the script URL and the last URL with the Management Agent download link from VSPC.
 #
 # --- Other usage ---
-#   Menu                :  sudo bash install-veeam-agent.sh
-#   Install with URL    :  sudo bash install-veeam-agent.sh "https://.../LinuxAgentPackages.xxx.sh"
-#   Full setup + menu   :  sudo bash install-veeam-agent.sh --setup "https://.../LinuxAgentPackages.xxx.sh"
-#   Script only (agents already installed):  sudo bash install-veeam-agent.sh --setup-local  (no URL, installs ovhbackupagent + menu)
-#   Diagnostic          :  sudo bash install-veeam-agent.sh --diagnostic
-#   Global command      :  sudo bash install-veeam-agent.sh --install-global  (then: ovhbackupagent)
+#   Menu                :  sudo bash ovh-ba-install.sh
+#   Install with URL    :  sudo bash ovh-ba-install.sh "https://.../LinuxAgentPackages.xxx.sh"
+#   Full setup + menu   :  sudo bash ovh-ba-install.sh --setup "https://.../LinuxAgentPackages.xxx.sh"
+#   Script only (agents already installed):  sudo bash ovh-ba-install.sh --setup-local  (no URL, installs ovhbackupagent + menu)
+#   Diagnostic          :  sudo bash ovh-ba-install.sh --diagnostic
+#   Global command      :  sudo bash ovh-ba-install.sh --install-global  (then: ovhbackupagent)
 #
 
 set -e
@@ -815,7 +815,7 @@ install_global_command() {
     if ! head -n 1 "$script_path" | grep -q '^#!'; then
       err "The script file does not look valid (missing shebang on line 1)."
       echo "  Do not run from 'curl | bash'. Save the script to a file, then run:"
-      echo "  sudo bash /path/to/install-veeam-agent.sh --install-global"
+      echo "  sudo bash /path/to/ovh-ba-install.sh --install-global"
       exit 1
     fi
     cp "$script_path" /usr/local/bin/ovhbackupagent
@@ -825,7 +825,7 @@ install_global_command() {
     echo "  (Make sure /usr/local/bin is in your PATH)"
   else
     err "The script must be run from a file (not via curl | bash)."
-    echo "  Download the script, then: sudo bash install-veeam-agent.sh --install-global"
+    echo "  Download the script, then: sudo bash ovh-ba-install.sh --install-global"
     exit 1
   fi
 }
@@ -893,7 +893,7 @@ case "${1:-}" in
     else
       echo "Usage:"
       echo "  Client one-liner (from UI):"
-      echo "  curl -sSL \"<SCRIPT_URL>\" -o /tmp/install-veeam-agent.sh && chmod +x /tmp/install-veeam-agent.sh && sudo bash /tmp/install-veeam-agent.sh --setup \"<MGMT_AGENT_URL>\""
+      echo "  curl -sSL \"<SCRIPT_URL>\" -o /tmp/ovh-ba-install.sh && chmod +x /tmp/ovh-ba-install.sh && sudo bash /tmp/ovh-ba-install.sh --setup \"<MGMT_AGENT_URL>\""
       echo ""
       echo "  Menu             : sudo bash $0  (or: sudo ovhbackupagent)"
       echo "  Full setup       : sudo bash $0 --setup \"https://.../LinuxAgentPackages.xxx.sh\""
