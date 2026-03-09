@@ -50,20 +50,16 @@ What each menu option does
   V — Open Veeam interface
     Opens the Veeam Backup Agent interface (if the Backup Agent is already installed). You can configure or run backups from there.
 
-  T — Test connection to VSPC
-    Tests whether your server can reach the backup gateway (VSPC). Useful to check network or firewall issues.
-
-  D — Run diagnostic
-    Checks the connection to the backup gateway, displays the status of the agents (Management Agent and Backup Agent), and analyses the agent log. If known error messages are found, brief explanations and links are shown. This does not create any file to send.
-
-  B — Create support bundle
-    Creates an archive (logs, system information, agent status) that you can send to support. The path of the created file is displayed at the end. Use this when you are asked to provide a "support bundle" or "diagnostic archive".
+  D — Diagnostic (submenu)
+    Opens the Diagnostic menu with:
+    - T — Test connection to VSPC (checks if your server can reach the backup gateway; useful for network or firewall issues).
+    - B — Create support bundle (archive of logs and system information to send to support).
+    - I — Issue analyzer (analyzes the agent log for known issues and shows explanations and links).
+    - J — Job stuck? Get help with force stop tool (lists running backup sessions and lets you force-stop one if needed; use with care).
+    - R — Return to main menu.
 
   I — Install Management Agent
     Only if you want to reinstall the Veeam Management Agent. You will be asked for the path or download URL of the installation package (provided by your backup interface).
-
-  J — Job stuck? Get help with force stop tool
-    Lists running backup sessions and lets you force-stop one if a job is stuck. Use with care: force stop may cause backup corruption. See: https://helpcenter.veeam.com/docs/agentforlinux/userguide/backup_job_stop.html?ver=13
 
   H — Help / README
     Displays this help.
@@ -77,8 +73,8 @@ Need help?
 
 If you encounter problems (agent not visible, backup failing, connection errors, etc.), you can:
 
-  1. Run D — Run diagnostic to see possible causes and links to documentation.
-  2. Run B — Create support bundle to generate an archive with logs and system information.
+  1. Open D — Diagnostic, then use I — Issue analyzer to see possible causes and links, or T — Test connection to check connectivity.
+  2. In Diagnostic, use B — Create support bundle to generate an archive with logs and system information.
   3. Contact OVHcloud support and, if needed, send them the support bundle file created in step 2.
 
 OVHcloud support: https://www.ovhcloud.com/en/support/
@@ -224,7 +220,7 @@ check_agent_status() {
       echo "  This is normal after a first Management Agent installation: Backup Agent"
       echo "  deployment by VSPC may take a few minutes."
       echo "  If after a few minutes the Backup Agent still does not appear, check"
-      echo "  the logs, create a support bundle (menu option B), or contact support."
+      echo "  the logs, open Diagnostic (D) and create a support bundle (B), or contact support."
     fi
   else
     warn "Unable to retrieve status (veeamconsoleconfig -s)."
@@ -568,7 +564,7 @@ run_install() {
     echo ""
     echo "To create a support bundle and send to support, run:"
     echo "  sudo bash $0 --support-bundle"
-    echo "  (or run 'sudo ovhbackupagent' and choose B — Create support bundle)"
+    echo "  (or run 'sudo ovhbackupagent', open Diagnostic (D), then choose B — Create support bundle)"
     exit 1
   fi
 
@@ -578,7 +574,7 @@ run_install() {
   echo ""
   echo ""
   echo "If you have issues (agent not visible, Backup Agent not deployed, etc.),"
-  echo "run the diagnostic (option D) or create a support bundle (option B) and contact OVHcloud support."
+  echo "open the Diagnostic menu (D) and use the issue analyzer (I) or support bundle (B), then contact OVHcloud support."
   sleep 4
 }
 
@@ -651,6 +647,56 @@ run_force_stop_menu() {
   read -p "Press Enter to return to menu..."
 }
 
+# --- Diagnostic submenu (interactive) ---
+run_diagnostic_menu() {
+  local d_choice
+  while true; do
+    clear
+    show_banner
+    title "Diagnostic"
+    echo "  T  Test connection to VSPC"
+    echo "  B  Create support bundle (archive to send to support)"
+    echo "  I  Issue analyzer (analyze agent log for known issues)"
+    echo "  J  Job stuck? Get help with force stop tool"
+    echo "  R  Return to main menu"
+    echo ""
+    read -p "  Your choice (T/B/I/J/R): " d_choice
+    d_choice="${d_choice^^}"
+
+    case "$d_choice" in
+      T)
+        echo ""
+        check_connectivity_msg
+        echo ""
+        read -p "Press Enter to return to diagnostic menu..."
+        ;;
+      B)
+        echo ""
+        run_support_bundle || true
+        echo ""
+        read -p "Press Enter to return to diagnostic menu..."
+        ;;
+      I)
+        echo ""
+        check_root --diagnostic
+        check_agent_log
+        echo ""
+        read -p "Press Enter to return to diagnostic menu..."
+        ;;
+      J)
+        run_force_stop_menu
+        ;;
+      R)
+        return 0
+        ;;
+      *)
+        echo "Choice not recognized."
+        sleep 1
+        ;;
+    esac
+  done
+}
+
 # --- Text menu ---
 run_gui() {
   check_root "[Interface]"
@@ -687,15 +733,12 @@ run_gui() {
     show_menu_status
     echo "  A  Agent status (veeamconsoleconfig -s)"
     echo "  V  Open Veeam interface (veeam command)"
-    echo "  T  Test connection to VSPC"
-    echo "  D  Run diagnostic (connection, agent status, log analysis)"
-    echo "  B  Create support bundle (archive to send to support)"
+    echo "  D  Diagnostic (test connection, support bundle, issue analyzer, job force stop)"
     echo "  I  Install Management Agent (only if you want to reinstall it)"
-    echo "  J  Job stuck? Get help with force stop tool"
     echo "  H  Help / README"
     echo "  Q  Quit"
     echo ""
-    read -p "  Your choice (A/V/T/D/B/I/J/H/Q): " choice
+    read -p "  Your choice (A/V/D/I/H/Q): " choice
     choice="${choice^^}"
 
     case "$choice" in
@@ -710,26 +753,8 @@ run_gui() {
           echo "No path or URL entered."
         fi
         ;;
-      J)
-        run_force_stop_menu
-        ;;
       D)
-        diag_tmp="/tmp/veeam-diag-$$.txt"
-        run_diagnostic 2>&1 | tee "$diag_tmp"
-        echo ""
-        read -p "Press Enter to return to menu..."
-        rm -f "$diag_tmp"
-        ;;
-      B)
-        run_support_bundle || true
-        echo ""
-        read -p "Press Enter to return to menu..."
-        ;;
-      T)
-        local msg
-        msg=$(check_connectivity_msg 2>&1)
-        echo ""; echo "$msg"; echo ""
-        read -p "Press Enter to return to menu..."
+        run_diagnostic_menu
         ;;
       A)
         local status_out config_out
